@@ -19,7 +19,7 @@ const signUp = async (req, res) => {
     await user.save().then(data => {
         res.send({
             message: "User signup completed successfully!!",
-            user: data
+            email: data.email
         });
     }).catch(err => {
         res.status(500).send({
@@ -56,7 +56,6 @@ const login = async (req, res) => {
             // Send the userId and token in the response
             return res.status(200).json({ userId: user._id, token: token, message: 'Login Successful!' });
         }
-        //res.json(user);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });

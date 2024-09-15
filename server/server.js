@@ -4,7 +4,8 @@ const express = require('express');
 const app = express();
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const UserRoute = require('./routes/userRoute.js');
+const userRoute = require('./routes/userRoute.js');
+const saucesRoute = require('./routes/saucesRoute.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
@@ -16,7 +17,8 @@ app.get('/', (req, res) => {
 })
 
 // Importing Routes to express app
-app.use('/api/auth', UserRoute);
+app.use('/api/auth', userRoute);
+app.use('/api/sauces', saucesRoute);
 
 // Initialize mongodb connection
 mongoose.Promise = global.Promise;
