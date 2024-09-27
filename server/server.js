@@ -7,8 +7,9 @@ const mongoose = require('mongoose');
 const userRoute = require('./routes/userRoute.js');
 const saucesRoute = require('./routes/saucesRoute.js');
 
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const port = 3000;
 app.use(cors({ origin: "http://localhost:4200" }));
 

@@ -12,7 +12,7 @@ export class SaucesService {
   sauces$ = new Subject<Sauce[]>();
 
   constructor(private http: HttpClient,
-              private auth: AuthService) {}
+    private auth: AuthService) { }
 
   getSauces() {
     this.http.get<Sauce[]>('http://localhost:3000/api/sauces').pipe(
@@ -54,6 +54,7 @@ export class SaucesService {
     const formData = new FormData();
     formData.append('sauce', JSON.stringify(sauce));
     formData.append('image', image);
+    // console.log(formData, 'formData');
     return this.http.post<{ message: string }>('http://localhost:3000/api/sauces', formData).pipe(
       catchError(error => throwError(error.error.message))
     );

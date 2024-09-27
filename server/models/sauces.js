@@ -20,8 +20,8 @@ var saucesSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    imageUrl: {
-        type: String,
+    imageData: {
+        type: Buffer,
         required: true
     },
     heat: {
