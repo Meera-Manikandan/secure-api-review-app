@@ -1,46 +1,55 @@
-var mongoose = require('mongoose');
-var saucesSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: false,
-    },
+const mongoose = require('mongoose');
+
+const saucesSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
     manufacturer: {
         type: String,
-        required: false
+        required: true
     },
     description: {
         type: String,
-        required: false
+        required: true
     },
     mainPepper: {
         type: String,
-        required: false
-    },
-    imageData: {
-        type: Buffer,
         required: true
     },
     heat: {
         type: Number,
-        required: false
+        required: true
     },
     likes: {
-        type: Number
+        type: Number,  // Number of likes
+        default: 0
     },
     dislikes: {
-        type: Number
+        type: Number,  // Number of dislikes
+        default: 0
     },
-    usersLiked: [{
-        type: String
-    }],
-    usersDisliked: [{
-        type: String
-    }],
+    usersLiked: {
+        type: [String],  // Array of user IDs who liked the sauce
+        default: []
+    },
+    usersDisliked: {
+        type: [String],  // Array of user IDs who disliked the sauce
+        default: []
+    },
+    userId: {
+        type: String,
+        required: true
+    },
+    imageUrl: {
+        type: String,  // Storing the base64-encoded image string
+        required: false
+    },
+    imageMimeType: {
+        type: String,  // Storing the MIME type (e.g., 'image/jpeg' or 'image/png')
+        required: false
+    }
 });
 
-var sauces = new mongoose.model('Sauces', saucesSchema);
-module.exports = sauces;
+const Sauces = mongoose.model('Sauces', saucesSchema);
+module.exports = Sauces;
