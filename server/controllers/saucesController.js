@@ -42,6 +42,82 @@ const createSauces = async (req, res) => {
     }
 };
 
+const updateSauce = async (req, res) => {
+    try {
+        const sauceId = req.params.id;  // Get the sauce ID from URL params
+        console.log(`Call reached to update sauce with ID: ${sauceId}`);
+
+        // Determine if the incoming data is in formData or JSON format
+        let sauceData;
+        let base64Image = null;
+        let imageMimeType = null;
+
+        // Check if image file is present
+        const imageFile = req.file;
+
+        // If using FormData
+        if (imageFile) {
+            // Access and parse the 'sauce' field from the request body
+            sauceData = req.body.sauce;
+            if (typeof sauceData === 'string') {
+                sauceData = JSON.parse(sauceData); // Parse if it's a stringified object
+            }
+
+            // Handle image upload
+            imageMimeType = imageFile.mimetype; // Save MIME type
+            base64Image = imageFile.buffer.toString('base64'); // Convert image to base64
+        } else {
+            // If not using FormData, assume JSON
+            sauceData = req.body;
+            // No image upload, but keep image fields intact
+        }
+
+        // Find the existing sauce and update the fields
+        const updatedSauce = await saucesModel.findByIdAndUpdate(
+            sauceId,
+            {
+                name: sauceData.name,
+                manufacturer: sauceData.manufacturer,
+                description: sauceData.description,
+                mainPepper: sauceData.mainPepper,
+                heat: sauceData.heat,
+                userId: sauceData.userId,
+                ...(base64Image && { imageUrl: base64Image, imageMimeType: imageMimeType }) // Update image if provided
+            },
+            { new: true }  // Return the updated sauce document
+        );
+
+        if (!updatedSauce) {
+            return res.status(404).json({ message: "Sauce not found" });
+        }
+
+        res.status(200).json({ message: "Sauce updated successfully", updatedSauce });
+    } catch (err) {
+        console.error('Error updating sauce:', err);
+        res.status(500).json({ message: 'Server error during sauce update' });
+    }
+};
+
+
+const deleteSauce = async (req, res) => {
+    try {
+        const sauceId = req.params.id;
+
+        // Find the sauce by ID and delete it
+        const deletedSauce = await saucesModel.findByIdAndDelete(sauceId);
+        
+        if (!deletedSauce) {
+            return res.status(404).json({ message: 'Sauce not found.' });
+        }
+
+        res.status(200).json({ message: 'Sauce deleted successfully!' });
+    } catch (err) {
+        console.error('Error deleting sauce:', err);
+        res.status(500).json({ message: 'Server error.' });
+    }
+};
+
+
 const getAllSauces = async (req, res) => {
     try {
         const sauces = await saucesModel.find();
@@ -167,6 +243,8 @@ const dislikeSauce = async (req, res) => {
 
 module.exports = {
     createSauces,
+    updateSauce,
+    deleteSauce,
     getAllSauces,
     getSauceById,
     likeSauce,

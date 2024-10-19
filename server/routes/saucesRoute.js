@@ -8,11 +8,11 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.post('/', upload.single('image'), saucesController.createSauces);
+router.put('/:id', upload.single('image'), saucesController.updateSauce);
+router.delete('/:id', saucesController.deleteSauce);  
 router.get('/', saucesController.getAllSauces);
 router.get('/:id', saucesController.getSauceById);
 router.post('/:id/like', saucesController.likeSauce);
 router.post('/:id/dislike', saucesController.dislikeSauce);
-
-
 
 module.exports = router;
